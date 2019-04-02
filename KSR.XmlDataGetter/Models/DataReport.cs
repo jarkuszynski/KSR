@@ -14,7 +14,9 @@ namespace KSR.XmlDataGetter.Models
 
         public DataReport(string title, string dateline, string body)
         {
-            
+            Title = title;
+            Dateline = dateline;
+            Body = body;
         }
     }
 }

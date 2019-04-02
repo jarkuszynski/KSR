@@ -6,7 +6,13 @@ using System.Threading.Tasks;
 
 namespace KSR.XmlDataGetter.Models
 {
-    class DataLabels
+    public class DataLabels
     {
+        public List<Label> LabelList { get; set; }
+
+        public DataLabels(List<Label> labels)
+        {
+            LabelList = labels;
+        }
     }
 }
