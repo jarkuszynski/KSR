@@ -19,58 +19,55 @@ namespace KSR.XmlDataGetter
             {
                 throw new Exception("File does not exists");
             }
-            else
+
+            using (var reader = new XmlTextReader(pathFile))
             {
-                using (var reader = new XmlTextReader(pathFile))
+                while (reader.Read())
                 {
-                    while (reader.Read())
+                    if (reader.NodeType == XmlNodeType.Element)
                     {
-                        if (reader.NodeType == XmlNodeType.Element)
+                        if (string.Equals(reader.Name, labelTitle, StringComparison.InvariantCultureIgnoreCase))
                         {
-                            if (string.Equals(reader.Name, labelTitle, StringComparison.InvariantCultureIgnoreCase))
+                            labels = new List<Label>();
+                            while (reader.Read())
                             {
-                                labels = new List<Label>();
-                                while (reader.Read())
+                                while (reader.Name.ToUpperInvariant() == "D")
                                 {
-                                    while (reader.Name.ToUpperInvariant() == "D")
-                                    {
-                                        reader.Read();
-                                    }
+                                    reader.Read();
+                                }
 
-                                    if (!string.IsNullOrWhiteSpace(reader.Value))
-                                    {
-                                        labels.Add(new Label(reader.Value));
-                                    }
+                                if (!string.IsNullOrWhiteSpace(reader.Value))
+                                {
+                                    labels.Add(new Label(reader.Value));
+                                }
 
-                                    if (reader.NodeType == XmlNodeType.EndElement && string.Equals(reader.Name,
-                                            $"{labelTitle}", StringComparison.InvariantCultureIgnoreCase))
-                                    {
-                                        break;
-                                    }
+                                if (reader.NodeType == XmlNodeType.EndElement && string.Equals(reader.Name,
+                                        $"{labelTitle}", StringComparison.InvariantCultureIgnoreCase))
+                                {
+                                    break;
                                 }
                             }
+                        }
 
-                            if (reader.Name.ToUpperInvariant() == "TITLE")
+                        if (reader.Name.ToUpperInvariant() == "TITLE")
+                        {
+                            reader.Read();
+                            string title = reader.Value;
+                            string dateline = ReadElem(reader, "DATELINE");
+                            string body = ReadElem(reader, "BODY");
+                            if (title != null && dateline != null && body != null)
                             {
-                                reader.Read();
-                                string title = reader.Value;
-                                string dateline = ReadElem(reader, "DATELINE");
-                                string body = ReadElem(reader, "BODY");
-                                if (title != null && dateline != null && body != null)
+                                if (!labels.Any())
                                 {
-                                    if (!labels.Any())
-                                    {
-                                        labels.Add(new Label("UNKNOWN"));
-                                    }
-
-                                    dataSet.Add(new DataSetItem(new DataReport(title, dateline, body), new DataLabels(labels)));
+                                    labels.Add(new Label("UNKNOWN"));
                                 }
+
+                                dataSet.Add(new DataSetItem(new DataReport(title, dateline, body), new DataLabels(labels)));
                             }
                         }
                     }
                 }
             }
-
             return dataSet;
         }
 
