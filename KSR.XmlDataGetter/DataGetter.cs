@@ -11,7 +11,7 @@ namespace KSR.XmlDataGetter
 {
     public class DataGetter
     {
-        public List<DataSetItem> ReadDataSetItems(string pathFile, string labelTitle)
+        public static List<DataSetItem> ReadDataSetItems(string pathFile, string labelTitle)
         {
             List<DataSetItem> dataSet = new List<DataSetItem>();
             List<Label> labels = new List<Label>();
@@ -71,7 +71,7 @@ namespace KSR.XmlDataGetter
             return dataSet;
         }
 
-        public string ReadElem(XmlTextReader reader, string elementTitle)
+        public static string ReadElem(XmlTextReader reader, string elementTitle)
         {
             bool isReading = true;
             while (isReading && !string.Equals(reader.Name.ToUpperInvariant(), elementTitle, StringComparison.InvariantCultureIgnoreCase))

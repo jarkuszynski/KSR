@@ -5,6 +5,12 @@ VisualStudioVersion = 15.0.28307.271
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KSR.XmlDataGetter", "KSR.XmlDataGetter\KSR.XmlDataGetter.csproj", "{203DA035-CFFC-4091-85AB-7238B1D5B06F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KSR.ConsoleApp", "KSR.ConsoleApp\KSR.ConsoleApp.csproj", "{7E2738CC-086B-4855-B4BA-B2D79077290C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KSR.DataModificator", "KSR.DataModificator\KSR.DataModificator.csproj", "{8B817BA6-3BEB-4C4F-A4E2-A859D8E17CD1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KSR.DataPreprocessing", "KSR.DataPreprocessing\KSR.DataPreprocessing.csproj", "{EDF0C39F-0B63-420C-B9BB-FC64183680AF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +21,18 @@ Global
 		{203DA035-CFFC-4091-85AB-7238B1D5B06F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{203DA035-CFFC-4091-85AB-7238B1D5B06F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{203DA035-CFFC-4091-85AB-7238B1D5B06F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7E2738CC-086B-4855-B4BA-B2D79077290C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E2738CC-086B-4855-B4BA-B2D79077290C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E2738CC-086B-4855-B4BA-B2D79077290C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E2738CC-086B-4855-B4BA-B2D79077290C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8B817BA6-3BEB-4C4F-A4E2-A859D8E17CD1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8B817BA6-3BEB-4C4F-A4E2-A859D8E17CD1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8B817BA6-3BEB-4C4F-A4E2-A859D8E17CD1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8B817BA6-3BEB-4C4F-A4E2-A859D8E17CD1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EDF0C39F-0B63-420C-B9BB-FC64183680AF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EDF0C39F-0B63-420C-B9BB-FC64183680AF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EDF0C39F-0B63-420C-B9BB-FC64183680AF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EDF0C39F-0B63-420C-B9BB-FC64183680AF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
