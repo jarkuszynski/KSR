@@ -20,7 +20,7 @@ namespace KSR.XmlDataGetter
                 throw new Exception("File does not exists");
             }
 
-            using (var reader = new XmlTextReader(pathFile))
+            using (var reader = new XmlTextReader(pathFile)) 
             {
                 while (reader.Read())
                 {
