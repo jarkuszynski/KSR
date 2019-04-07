@@ -41,8 +41,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Tokenization.cs" />
+    <Compile Include="Interfaces\IPorter2Stemmer.cs" />
+    <Compile Include="Interfaces\IStemmer.cs" />
+    <Compile Include="Porter2Stemmer.cs" />
+    <Compile Include="StopWordsDictionary.cs" />
+    <Compile Include="DataPreprocessingTool.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\KSR.XmlDataGetter\KSR.XmlDataGetter.csproj">
+      <Project>{203da035-cffc-4091-85ab-7238b1d5b06f}</Project>
+      <Name>KSR.XmlDataGetter</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
