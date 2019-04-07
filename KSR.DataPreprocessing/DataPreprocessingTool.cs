@@ -1,4 +1,6 @@
-﻿using System;
+﻿using KSR.DataPreprocessing.Models;
+using KSR.XmlDataGetter.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,11 +10,11 @@ namespace KSR.DataPreprocessing
 {
     public class DataPreprocessingTool
     {
-        public static List<string> PreprocessText(string text)
+        public static PreprocessedDataSetItem PreprocessText(DataSetItem dataSetItem)
         {
             char[] delimiters = new[] {' ', ',', ';', '.', '\t', '\r', '\n'};
             var wordsWithoutDelimiters =
-                text.Split(delimiters, StringSplitOptions.RemoveEmptyEntries)
+                dataSetItem.Article.Body.Split(delimiters, StringSplitOptions.RemoveEmptyEntries)
                     .Where(w => w.Length > 1 && !double.TryParse(w, out _)).ToList();       //000?
             StringBuilder builder = new StringBuilder();
             Porter2Stemmer stemmer = new Porter2Stemmer();
@@ -26,8 +28,7 @@ namespace KSR.DataPreprocessing
                     builder.Append(lowerWord.ToLowerInvariant()).Append(' ');
                 }
             }
-
-            return builder.ToString().Split(' ').ToList();
+            return new PreprocessedDataSetItem(dataSetItem.Labels.LabelList, builder.ToString().Split(' ').ToList());
         }
     }
 }

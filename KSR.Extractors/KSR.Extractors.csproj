@@ -46,6 +46,10 @@
     <Compile Include="TFExtractor.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\KSR.DataPreprocessing\KSR.DataPreprocessing.csproj">
+      <Project>{EDF0C39F-0B63-420C-B9BB-FC64183680AF}</Project>
+      <Name>KSR.DataPreprocessing</Name>
+    </ProjectReference>
     <ProjectReference Include="..\KSR.XmlDataGetter\KSR.XmlDataGetter.csproj">
       <Project>{203da035-cffc-4091-85ab-7238b1d5b06f}</Project>
       <Name>KSR.XmlDataGetter</Name>

@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="Interfaces\IPorter2Stemmer.cs" />
     <Compile Include="Interfaces\IStemmer.cs" />
+    <Compile Include="Models\PreprocessedDataSetItem.cs" />
     <Compile Include="Porter2Stemmer.cs" />
     <Compile Include="StopWordsDictionary.cs" />
     <Compile Include="DataPreprocessingTool.cs" />

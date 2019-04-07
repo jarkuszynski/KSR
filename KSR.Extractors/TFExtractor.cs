@@ -4,25 +4,34 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using KSR.XmlDataGetter.Models;
+using KSR.XmlDataGetter;
+using KSR.DataPreprocessing;
+using KSR.DataPreprocessing.Models;
 
 namespace KSR.Extractors
 {
     public class TFExtractor : IExtractor
     {
-        public List<DataFeatureDictionary> extractFeatureDictionary(List<DataSetItem> dataSetItems)
+        public TFExtractor()
+        {
+
+        }
+        public List<DataFeatureDictionary> extractFeatureDictionary(List<PreprocessedDataSetItem> PreprocessedDataSetItems)
         {
             List<DataFeatureDictionary> extractedData = new List<DataFeatureDictionary>();
-            DataFeatureDictionary tempDictionary = new DataFeatureDictionary();
+           
             /*
              1. Take every article from dataSetItems
              2. array: Prepare them to have plain array of words lowercase and after Lemization, without stopwords
              3. take array and create from this DataFeatureDictionary
              */
-            List<string> tempWordsFromArticle; // wszystkie slowa z 1 artykulu, ktory jest przefiltrowany
-
-            foreach (DataSetItem articleWithLabel in dataSetItems)
+             // label TODO
+            List<string> tempWordsFromArticle; // wszystkie slowa z 1 artykulu, ktory jest przefiltrowan
+            foreach (var articleWithLabel in PreprocessedDataSetItems)
             {
-                tempWordsFromArticle = articleWithLabel.Article.Body; //TODO change body to List<string>
+                DataFeatureDictionary tempDictionary = new DataFeatureDictionary();
+                tempWordsFromArticle = new List<string>();
+                tempWordsFromArticle = articleWithLabel.ProcessedWords; //TODO change body to List<string>
 
                 foreach (string word in tempWordsFromArticle)
                 {
@@ -35,6 +44,7 @@ namespace KSR.Extractors
                         tempDictionary.Feature.Add(word, 1.0);
                     }
                 }
+                tempDictionary.Label = articleWithLabel.Labels.ElementAt(0).Value;
                 extractedData.Add(tempDictionary);
             }
 

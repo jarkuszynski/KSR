@@ -11,6 +11,10 @@ namespace KSR.XmlDataGetter.Models
         public string Label { get; set; }
         public Dictionary<string, double> Feature { get; set; }
 
+        public DataFeatureDictionary()
+        {
 
+            Feature = new Dictionary<string, double>();
+        }
     }
 }

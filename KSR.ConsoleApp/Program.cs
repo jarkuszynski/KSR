@@ -8,6 +8,7 @@ using KSR.XmlDataGetter;
 using KSR.DataPreprocessing;
 using System.Configuration;
 using System.Collections.Specialized;
+using KSR.Extractors;
 
 namespace KSR.ConsoleApp
 {
@@ -27,7 +28,9 @@ namespace KSR.ConsoleApp
             string filePath = "C:\\Users\\Maciej\\source\\repos\\KSR\\data\\reut2-000.sgm";
             var tmp = DataGetter.ReadDataSetItems(filePath, "PLACES");
             Porter2Stemmer stemmer = new Porter2Stemmer();
-             var filtered = tmp.Select(s => (s.Labels, (DataPreprocessingTool.PreprocessText(s.Article.Body)))).ToList();
+             var filtered = tmp.Select(s => DataPreprocessingTool.PreprocessText(s)).ToList();
+            IExtractor extractor = new TFExtractor();
+            var x = extractor.extractFeatureDictionary(filtered);
         }
     }
 }
