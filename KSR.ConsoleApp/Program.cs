@@ -13,9 +13,9 @@ namespace KSR.ConsoleApp
     {
         static void Main(string[] args)
         {
-            string filePath = "C:\\Users\\Johnny\\Desktop\\ksr\\data\\reut2-000.sgm";
+            string filePath = "C:\\Users\\johnn\\Desktop\\Studia_Projekty\\KSR\\KSR\\data\\reut2-000.sgm";
             var tmp = DataGetter.ReadDataSetItems(filePath, "PLACES");
-            var filtered = tmp.Select(s => (s.Labels, Tokenization.Tokenize(s.Report.Body))).ToList();
+            var filtered = tmp.Select(s => (s.Labels, DataPreprocessingTool.TokenizeAndRemoveStopWords(s.Report.Body))).ToList();
         }
     }
 }
