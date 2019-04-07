@@ -24,15 +24,10 @@ namespace KSR.ConsoleApp
              after getting knn results, classify testing data and collect results
              */
             ConfigLoader Config = new ConfigLoader();
-            Console.WriteLine(Config);
             string filePath = "C:\\Users\\Maciej\\source\\repos\\KSR\\data\\reut2-000.sgm";
             var tmp = DataGetter.ReadDataSetItems(filePath, "PLACES");
-            var filtered = tmp.Select(s => (s.Labels, Tokenization.Tokenize(s.Report.Body))).ToList();
-            Console.WriteLine();
-            string filePath = "C:\\Users\\johnn\\Desktop\\Studia_Projekty\\KSR\\KSR\\data\\reut2-000.sgm";
-            var tmp = DataGetter.ReadDataSetItems(filePath, "PLACES");
             Porter2Stemmer stemmer = new Porter2Stemmer();
-             var filtered = tmp.Select(s => (s.Labels, (DataPreprocessingTool.PreprocessText(s.Report.Body)))).ToList();
+             var filtered = tmp.Select(s => (s.Labels, (DataPreprocessingTool.PreprocessText(s.Article.Body)))).ToList();
         }
     }
 }

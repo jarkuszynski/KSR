@@ -42,8 +42,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DataGetter.cs" />
+    <Compile Include="Models\DataFeatureDictionary.cs" />
     <Compile Include="Models\DataLabels.cs" />
-    <Compile Include="Models\DataReport.cs" />
+    <Compile Include="Models\DataArticle.cs" />
     <Compile Include="Models\DataSetItem.cs" />
     <Compile Include="Models\Label.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
