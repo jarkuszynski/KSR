@@ -62,7 +62,7 @@ namespace KSR.XmlDataGetter
                                     labels.Add(new Label("UNKNOWN"));
                                 }
 
-                                dataSet.Add(new DataSetItem(new DataReport(title, dateline, body), new DataLabels(labels)));
+                                dataSet.Add(new DataSetItem(new DataArticle(title, dateline, body), new DataLabels(labels)));
                             }
                         }
                     }

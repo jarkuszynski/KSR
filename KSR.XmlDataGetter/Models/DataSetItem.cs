@@ -8,11 +8,11 @@ namespace KSR.XmlDataGetter.Models
 {
     public class DataSetItem
     {
-        public DataReport Report { get; set; }
+        public DataArticle Article { get; set; }
         public DataLabels Labels { get; set; }
-        public DataSetItem(DataReport dataReport, DataLabels dataLabels)
+        public DataSetItem(DataArticle dataArticle, DataLabels dataLabels)
         {
-            Report = dataReport;
+            Article = dataArticle;
             Labels = dataLabels;
         }
     }

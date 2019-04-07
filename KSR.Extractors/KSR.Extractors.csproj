@@ -4,17 +4,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{7E2738CC-086B-4855-B4BA-B2D79077290C}</ProjectGuid>
-    <OutputType>Exe</OutputType>
-    <RootNamespace>KSR.ConsoleApp</RootNamespace>
-    <AssemblyName>KSR.ConsoleApp</AssemblyName>
+    <ProjectGuid>{7C22856D-5DC2-466F-BEBF-3DE73374563C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>KSR.Extractors</RootNamespace>
+    <AssemblyName>KSR.Extractors</AssemblyName>
     <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -24,7 +23,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -34,7 +32,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -44,23 +41,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ConfigLoader.cs" />
-    <Compile Include="Program.cs" />
+    <Compile Include="Class1.cs" />
+    <Compile Include="IExtractor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-    <None Include="KSR.ConsoleApp.exe.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\KSR.DataPreprocessing\KSR.DataPreprocessing.csproj">
-      <Project>{edf0c39f-0b63-420c-b9bb-fc64183680af}</Project>
-      <Name>KSR.DataPreprocessing</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\KSR.XmlDataGetter\KSR.XmlDataGetter.csproj">
-      <Project>{203da035-cffc-4091-85ab-7238b1d5b06f}</Project>
-      <Name>KSR.XmlDataGetter</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
