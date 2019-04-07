@@ -8,21 +8,22 @@ namespace KSR.DataPreprocessing
 {
     public class DataPreprocessingTool
     {
-        public static IEnumerable<string> TokenizeAndRemoveStopWords(string text)
+        public static List<string> PreprocessText(string text)
         {
             char[] delimiters = new[] {' ', ',', ';', '.', '\t', '\r', '\n'};
             var wordsWithoutDelimiters =
                 text.Split(delimiters, StringSplitOptions.RemoveEmptyEntries)
-                    .Where(w => w.Length > 1 && !double.TryParse(w, out _)).ToList();
+                    .Where(w => w.Length > 1 && !double.TryParse(w, out _)).ToList();       //000?
             StringBuilder builder = new StringBuilder();
-
+            Porter2Stemmer stemmer = new Porter2Stemmer();
             foreach (string currWord in wordsWithoutDelimiters)
             {
                 string lowerWord = currWord.ToLowerInvariant();
 
                 if (!StopWordsDictionary.Stops.ContainsKey(lowerWord))
                 {
-                    builder.Append(lowerWord).Append(' ');
+                    lowerWord = stemmer.Stem(currWord);
+                    builder.Append(lowerWord.ToLowerInvariant()).Append(' ');
                 }
             }
 

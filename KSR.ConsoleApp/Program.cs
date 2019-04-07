@@ -15,7 +15,8 @@ namespace KSR.ConsoleApp
         {
             string filePath = "C:\\Users\\johnn\\Desktop\\Studia_Projekty\\KSR\\KSR\\data\\reut2-000.sgm";
             var tmp = DataGetter.ReadDataSetItems(filePath, "PLACES");
-            var filtered = tmp.Select(s => (s.Labels, DataPreprocessingTool.TokenizeAndRemoveStopWords(s.Report.Body))).ToList();
+            Porter2Stemmer stemmer = new Porter2Stemmer();
+             var filtered = tmp.Select(s => (s.Labels, (DataPreprocessingTool.PreprocessText(s.Report.Body)))).ToList();
         }
     }
 }

@@ -41,8 +41,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Interfaces\IPorter2Stemmer.cs" />
+    <Compile Include="Interfaces\IStemmer.cs" />
+    <Compile Include="Porter2Stemmer.cs" />
     <Compile Include="StopWordsDictionary.cs" />
-    <Compile Include="Tokenization.cs" />
+    <Compile Include="DataPreprocessingTool.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
