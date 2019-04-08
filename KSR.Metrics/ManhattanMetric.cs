@@ -7,7 +7,7 @@ using KSR.XmlDataGetter.Models;
 
 namespace KSR.Metrics
 {
-    public class EuclideanMetric : IMetric
+    public class ManhattanMetric : IMetric
     {
         public double getDistance(DataFeatureDictionary toCompareData, DataFeatureDictionary roleData)
         {
@@ -23,7 +23,7 @@ namespace KSR.Metrics
                 double keyValue = 0.0;
                 toCompareDataValue = toCompareData.Feature.TryGetValue(keyWord, out keyValue) ? keyValue : 0.0;
                 roleDataValue = roleData.Feature.TryGetValue(keyWord, out keyValue) ? keyValue : 0.0;
-                distance += Math.Sqrt(Math.Pow(toCompareDataValue - roleDataValue, 2));
+                distance += Math.Abs(toCompareDataValue - roleDataValue);
             }
             return distance;
         }

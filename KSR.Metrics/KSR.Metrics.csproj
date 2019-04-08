@@ -41,8 +41,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ChebyshevMetric.cs" />
     <Compile Include="EuclideanMetric.cs" />
     <Compile Include="IMetric.cs" />
+    <Compile Include="ManhattanMetric.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
