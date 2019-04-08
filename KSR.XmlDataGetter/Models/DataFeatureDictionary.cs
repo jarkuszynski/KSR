@@ -27,7 +27,7 @@ namespace KSR.XmlDataGetter.Models
         /// <param name="classifiedLabel"> classified label - to check with original</param>
         public DataFeatureDictionary(string label, Dictionary<string, double> feature, string classifiedLabel)
         {
-            Label = Label;
+            Label = label;
             Feature = feature;
             ClassifiedLabel = classifiedLabel;
         }

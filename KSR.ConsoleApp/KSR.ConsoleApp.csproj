@@ -53,6 +53,10 @@
     <None Include="KSR.ConsoleApp.exe.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Classificator\KSR.Classificator.csproj">
+      <Project>{20514387-78EE-4112-ABFC-157A11B3779A}</Project>
+      <Name>KSR.Classificator</Name>
+    </ProjectReference>
     <ProjectReference Include="..\KSR.DataPreprocessing\KSR.DataPreprocessing.csproj">
       <Project>{edf0c39f-0b63-420c-b9bb-fc64183680af}</Project>
       <Name>KSR.DataPreprocessing</Name>
@@ -60,6 +64,10 @@
     <ProjectReference Include="..\KSR.Extractors\KSR.Extractors.csproj">
       <Project>{7C22856D-5DC2-466F-BEBF-3DE73374563C}</Project>
       <Name>KSR.Extractors</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\KSR.Metrics\KSR.Metrics.csproj">
+      <Project>{0C71C5E4-BEC8-490F-B2FE-8ADCCF1ACD11}</Project>
+      <Name>KSR.Metrics</Name>
     </ProjectReference>
     <ProjectReference Include="..\KSR.XmlDataGetter\KSR.XmlDataGetter.csproj">
       <Project>{203da035-cffc-4091-85ab-7238b1d5b06f}</Project>
