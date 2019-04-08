@@ -12,7 +12,7 @@ namespace KSR.DataPreprocessing
     {
         public static PreprocessedDataSetItem PreprocessText(DataSetItem dataSetItem)
         {
-            char[] delimiters = new[] {' ', ',', ';', '.', '\t', '\r', '\n'};
+            char[] delimiters = new[] {' ', ',', ';', '.', '\t', '\r', '\n', '+'};
             var wordsWithoutDelimiters =
                 dataSetItem.Article.Body.Split(delimiters, StringSplitOptions.RemoveEmptyEntries)
                     .Where(w => w.Length > 1 && !double.TryParse(w, out _)).ToList();       //000?
@@ -28,7 +28,10 @@ namespace KSR.DataPreprocessing
                     builder.Append(lowerWord.ToLowerInvariant()).Append(' ');
                 }
             }
-            return new PreprocessedDataSetItem(dataSetItem.Labels.LabelList, builder.ToString().Split(' ').ToList());
+
+            var wordList = builder.ToString().Split(' ').ToList();
+            wordList.RemoveAt(wordList.Count - 1);
+            return new PreprocessedDataSetItem(dataSetItem.Labels.LabelList, wordList);
         }
     }
 }
