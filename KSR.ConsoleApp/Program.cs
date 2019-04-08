@@ -8,6 +8,7 @@ using KSR.XmlDataGetter;
 using KSR.DataPreprocessing;
 using System.Configuration;
 using System.Collections.Specialized;
+using System.IO;
 using KSR.Extractors;
 using Classificator;
 using KSR.Metrics;
@@ -40,7 +41,7 @@ namespace KSR.ConsoleApp
              after getting knn results, classify testing data and collect results
              */
             ConfigLoader Config = new ConfigLoader();
-            string filePath = "C:\\Users\\Maciej\\source\\repos\\KSR\\data\\reut2-000.sgm";
+            string filePath =$"{Directory.GetCurrentDirectory()}\\..\\..\\..\\data\\reut2-000.sgm";
             var tmp = DataGetter.ReadDataSetItems(filePath, "PLACES");
             Porter2Stemmer stemmer = new Porter2Stemmer();
             var filtered = tmp.Select(s => DataPreprocessingTool.PreprocessText(s)).ToList();
