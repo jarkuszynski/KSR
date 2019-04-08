@@ -5,32 +5,64 @@ using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using KSR.Metrics;
+using KSR.Extractors;
+
 
 namespace KSR.ConsoleApp
 {
     public class ConfigLoader
     {
-        public string source { get; }
-        public string label { get; }
-        public List<string> labels { get; }
-        public int k { get; }
-        public int trainingSetPercentage { get; set; }
-        public string chosenMetric { get; set; }
-        public string featuresExtractor { get; set; }
-        public int n { get; set; }
-        public int limit { get; set; }
+        public string Sources { get; }
+        public string Label { get; }
+        public List<string> Labels { get; }
+        public int K { get; }
+        public double TrainingSetPercentage { get; set; }
+        public double TestingSetPercentage { get; set; }
+        public IMetric Metric { get; set; }
+        public IExtractor Extractor { get; set; }
+        public int N { get; set; }
 
         public ConfigLoader()
         {
-            source = ConfigurationManager.AppSettings.Get("source");
-            label = ConfigurationManager.AppSettings.Get("label");
-            labels = ConfigurationManager.AppSettings.Get("labels").Split(',').ToList();
-            k = int.Parse(ConfigurationManager.AppSettings.Get("k"));
-            trainingSetPercentage = int.Parse(ConfigurationManager.AppSettings.Get("trainingSetPercentage"));
-            chosenMetric = ConfigurationManager.AppSettings.Get("metric");
-            featuresExtractor = ConfigurationManager.AppSettings.Get("extractor");
-            n = int.Parse(ConfigurationManager.AppSettings.Get("n"));
-            limit = int.Parse(ConfigurationManager.AppSettings.Get("limit"));
+            Sources = ConfigurationManager.AppSettings.Get("source");
+            Label = ConfigurationManager.AppSettings.Get("label");
+            Labels = ConfigurationManager.AppSettings.Get("labels").Split(',').ToList();
+            K = int.Parse(ConfigurationManager.AppSettings.Get("k"));
+            TrainingSetPercentage = int.Parse(ConfigurationManager.AppSettings.Get("trainingSetPercentage"))/ 100.0;
+            TestingSetPercentage = 1.0 - TrainingSetPercentage;
+            Metric = setMetric(ConfigurationManager.AppSettings.Get("metric"));
+            Extractor = setExtractor(ConfigurationManager.AppSettings.Get("extractor"));
+            N = int.Parse(ConfigurationManager.AppSettings.Get("n"));
         }
+
+        IMetric setMetric(string metric)
+        {
+            switch (metric)
+            {
+                case "euclidean":
+                    return new EuclideanMetric();
+                    break;
+                default:
+                    return new EuclideanMetric();
+                    break;
+            }
+        }
+
+        IExtractor setExtractor(string extractor)
+        {
+            switch (extractor)
+            {
+                case "TF":
+                    return new TFExtractor();
+                    break;
+                default:
+                    return new TFExtractor(); ;
+                    break;
+
+            }
+        }
+
+        
     }
 }
