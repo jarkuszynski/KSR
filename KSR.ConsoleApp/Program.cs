@@ -9,9 +9,23 @@ using KSR.DataPreprocessing;
 using System.Configuration;
 using System.Collections.Specialized;
 using KSR.Extractors;
+using Classificator;
+using KSR.Metrics;
 
 namespace KSR.ConsoleApp
 {
+
+    class Label_Distace
+    {
+        public string label;
+        public double distance;
+
+        public Label_Distace(string label, double distance)
+        {
+            this.label = label;
+            this.distance = distance;
+        }
+    }
     class Program
     {
         static void Main(string[] args)
@@ -28,9 +42,14 @@ namespace KSR.ConsoleApp
             string filePath = "C:\\Users\\Maciej\\source\\repos\\KSR\\data\\reut2-000.sgm";
             var tmp = DataGetter.ReadDataSetItems(filePath, "PLACES");
             Porter2Stemmer stemmer = new Porter2Stemmer();
-             var filtered = tmp.Select(s => DataPreprocessingTool.PreprocessText(s)).ToList();
+            var filtered = tmp.Select(s => DataPreprocessingTool.PreprocessText(s)).ToList();
             IExtractor extractor = new TFExtractor();
             var x = extractor.extractFeatureDictionary(filtered);
+            KNNClassificator knn = new KNNClassificator(x, 9, 20, new EuclideanMetric());
+
+
+
+
         }
     }
 }

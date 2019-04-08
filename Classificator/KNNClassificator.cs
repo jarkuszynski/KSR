@@ -8,6 +8,17 @@ using System.Threading.Tasks;
 
 namespace Classificator
 {
+    class Label_Distace
+    {
+        public string label;
+        public double distance;
+
+        public Label_Distace(string label, double distance)
+        {
+            this.label = label;
+            this.distance = distance;
+        }
+    }
     public class KNNClassificator
     {
         /*
@@ -29,9 +40,28 @@ namespace Classificator
             this.metric = metric;
         }
 
-        public List<DataFeatureDictionary> classify(DataFeatureDictionary testingData)
+        public DataFeatureDictionary classify(DataFeatureDictionary testingData)
         {
-            List<DataFeatureDictionary> classifiedData = new List<DataFeatureDictionary>();
+            DataFeatureDictionary classifiedData = new DataFeatureDictionary();
+
+            List<Label_Distace> label_Distaces = new List<Label_Distace>();
+            foreach (var dataFeatureEntity in trainingData)
+            {
+                label_Distaces.Add(new Label_Distace(dataFeatureEntity.Label,
+                    metric.getDistance(testingData, dataFeatureEntity)
+                    ));
+            }
+            label_Distaces.Sort((prev, next) => prev.distance.CompareTo(next.distance));
+
+            //take only this distances limited by k param
+            label_Distaces = label_Distaces.Take(k).ToList();
+
+            //TODO check!!!
+            var grouped_Labels = label_Distaces.GroupBy(l_d => l_d.label).Select(d => d.ToList()).ToList();
+            grouped_Labels.Sort((prev, next) => prev.Count.CompareTo(next.Count));
+            grouped_Labels.Reverse();
+
+            classifiedData = new DataFeatureDictionary(testingData.Label, testingData.Feature, grouped_Labels[0].First().label);
 
 
             return classifiedData;
