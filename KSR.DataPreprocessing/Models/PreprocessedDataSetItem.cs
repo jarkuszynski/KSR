@@ -17,5 +17,10 @@ namespace KSR.DataPreprocessing.Models
             Labels = labels;
             ProcessedWords = processedWords;
         }
+        public PreprocessedDataSetItem(Label label)
+        {
+            ProcessedWords = new List<string>();
+            Labels.Add(label);
+        }
     }
 }
