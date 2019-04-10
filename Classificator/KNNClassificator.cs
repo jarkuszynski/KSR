@@ -29,14 +29,12 @@ namespace Classificator
          */
         private List<DataFeatureDictionary> trainingData = new List<DataFeatureDictionary>();
         private int k;
-        private int maxDistance;
         private IMetric metric;
 
-        public KNNClassificator(List<DataFeatureDictionary> trainingData,int k,int maxDistance,IMetric metric)
+        public KNNClassificator(List<DataFeatureDictionary> trainingData,int k,IMetric metric)
         {
             this.trainingData = trainingData;
             this.k = k;
-            this.maxDistance = maxDistance;
             this.metric = metric;
         }
 
