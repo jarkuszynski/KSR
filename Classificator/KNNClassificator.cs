@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 
 namespace Classificator
 {
-    class Label_Distace
+    class Label_Distance
     {
         public string label;
         public double distance;
 
-        public Label_Distace(string label, double distance)
+        public Label_Distance(string label, double distance)
         {
             this.label = label;
             this.distance = distance;
@@ -44,20 +44,20 @@ namespace Classificator
         {
             DataFeatureDictionary classifiedData = new DataFeatureDictionary();
 
-            List<Label_Distace> label_Distaces = new List<Label_Distace>();
+            List<Label_Distance> label_Distances = new List<Label_Distance>();
             foreach (var dataFeatureEntity in trainingData)
             {
-                label_Distaces.Add(new Label_Distace(dataFeatureEntity.Label,
+                label_Distances.Add(new Label_Distance(dataFeatureEntity.Label,
                     metric.getDistance(testingData, dataFeatureEntity)
                     ));
             }
-            label_Distaces.Sort((prev, next) => prev.distance.CompareTo(next.distance));
+            label_Distances.Sort((prev, next) => prev.distance.CompareTo(next.distance));
 
             //take only this distances limited by k param
-            label_Distaces = label_Distaces.Take(k).ToList();
+            label_Distances = label_Distances.Take(k).ToList();
 
             //TODO check!!!
-            var grouped_Labels = label_Distaces.GroupBy(l_d => l_d.label).Select(d => d.ToList()).ToList();
+            var grouped_Labels = label_Distances.GroupBy(l_d => l_d.label).Select(d => d.ToList()).ToList();
             grouped_Labels.Sort((prev, next) => prev.Count.CompareTo(next.Count));
             grouped_Labels.Reverse();
 

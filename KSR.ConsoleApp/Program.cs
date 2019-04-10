@@ -42,7 +42,8 @@ namespace KSR.ConsoleApp
              */
             ConfigLoader Config = new ConfigLoader();
             string filePath =$"{Directory.GetCurrentDirectory()}\\..\\..\\..\\data\\reut2-000.sgm";
-            var tmp = DataGetter.ReadDataSetItems(filePath, "PLACES");
+            string[] filteredLabel = new[] { "west-germany", "usa", "france", "uk", "canada", "japan"};
+            var tmp = DataGetter.ReadDataSetItems(filePath, "PLACES", filteredLabel);
             Porter2Stemmer stemmer = new Porter2Stemmer();
             var filtered = tmp.Select(s => DataPreprocessingTool.PreprocessText(s)).ToList();
             IExtractor extractor = new TFExtractor();

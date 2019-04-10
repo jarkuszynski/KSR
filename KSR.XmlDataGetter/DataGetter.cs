@@ -11,10 +11,11 @@ namespace KSR.XmlDataGetter
 {
     public class DataGetter
     {
-        public static List<DataSetItem> ReadDataSetItems(string pathFile, string labelTitle)
+        public static List<DataSetItem> ReadDataSetItems(string pathFile, string labelTitle, string[] labelFilterConditions)
         {
             List<DataSetItem> dataSet = new List<DataSetItem>();
             List<Label> labels = new List<Label>();
+            bool isLabeled = false;
             if (!File.Exists(pathFile))
             {
                 throw new Exception("File does not exists");
@@ -29,6 +30,7 @@ namespace KSR.XmlDataGetter
                         if (string.Equals(reader.Name, labelTitle, StringComparison.InvariantCultureIgnoreCase))
                         {
                             labels = new List<Label>();
+                            isLabeled = false;
                             while (reader.Read())
                             {
                                 while (reader.Name.ToUpperInvariant() == "D")
@@ -36,9 +38,10 @@ namespace KSR.XmlDataGetter
                                     reader.Read();
                                 }
 
-                                if (!string.IsNullOrWhiteSpace(reader.Value))
+                                if (!string.IsNullOrWhiteSpace(reader.Value) && labelFilterConditions.Any(l => l == reader.Value))
                                 {
                                     labels.Add(new Label(reader.Value));
+                                    isLabeled = true;
                                 }
 
                                 if (reader.NodeType == XmlNodeType.EndElement && string.Equals(reader.Name,
@@ -61,13 +64,15 @@ namespace KSR.XmlDataGetter
                                 {
                                     labels.Add(new Label("UNKNOWN"));
                                 }
-
-                                dataSet.Add(new DataSetItem(new DataArticle(title, dateline, body), new DataLabels(labels)));
+                                
+                                if(isLabeled)
+                                    dataSet.Add(new DataSetItem(new DataArticle(title, dateline, body), new DataLabels(labels)));
                             }
                         }
                     }
                 }
             }
+            
             return dataSet;
         }
 
