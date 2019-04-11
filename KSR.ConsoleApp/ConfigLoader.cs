@@ -56,6 +56,9 @@ namespace KSR.ConsoleApp
                 case "TF":
                     return new TFExtractor();
                     break;
+                case "TFIDE":
+                    return new TFIDEExtractor();
+                    break;
                 default:
                     return new TFExtractor(); ;
                     break;

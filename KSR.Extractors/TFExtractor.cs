@@ -26,7 +26,9 @@ namespace KSR.Extractors
              3. take array and create from this DataFeatureDictionary
              */
              // label TODO
-            List<string> tempWordsFromArticle; // wszystkie slowa z 1 artykulu, ktory jest przefiltrowan
+
+            //TODO TF is when we calculate N/n <- change that! 
+            List<string> tempWordsFromArticle = new List<string>(); // wszystkie slowa z 1 artykulu, ktory jest przefiltrowan
             foreach (var articleWithLabel in PreprocessedDataSetItems)
             {
                 DataFeatureDictionary tempDictionary = new DataFeatureDictionary();
@@ -49,7 +51,26 @@ namespace KSR.Extractors
             }
 
 
-            return extractedData;
+            //TODO FIX Changing the same collection wtf!!!!
+            
+            List<DataFeatureDictionary> tfExtractedData = new List<DataFeatureDictionary>();
+            double TFfactor= 0.0;
+            foreach (var article in extractedData)
+            {
+                int numberOfTermsInDocument = article.Feature.Count;
+
+                Dictionary<string, double> tempFeatures = new Dictionary<string, double>();
+                foreach (var key in article.Feature.Keys)
+                {
+                    TFfactor = article.Feature[key] / numberOfTermsInDocument;
+                    tempFeatures.Add(key, TFfactor);
+                }
+                tfExtractedData.Add(new DataFeatureDictionary(article.Label, tempFeatures, ""));
+
+            }
+
+            
+            return tfExtractedData;
         }
     }
 }
