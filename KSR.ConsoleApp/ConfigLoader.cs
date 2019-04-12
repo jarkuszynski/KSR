@@ -32,8 +32,8 @@ namespace KSR.ConsoleApp
             TrainingSetPercentage = int.Parse(ConfigurationManager.AppSettings.Get("trainingSetPercentage"))/ 100.0;
             TestingSetPercentage = 1.0 - TrainingSetPercentage;
             Metric = setMetric(ConfigurationManager.AppSettings.Get("metric"));
-            Extractor = setExtractor(ConfigurationManager.AppSettings.Get("extractor"));
             N = int.Parse(ConfigurationManager.AppSettings.Get("n"));
+            Extractor = setExtractor(ConfigurationManager.AppSettings.Get("extractor"));
         }
 
         IMetric setMetric(string metric)
@@ -58,6 +58,12 @@ namespace KSR.ConsoleApp
                     break;
                 case "TFIDE":
                     return new TFIDEExtractor();
+                    break;
+                case "NGRAM":
+                    return new NGramExtractor(N);
+                    break;
+                case "KEYWORDS":
+                    return new KeyWordsExtractor();
                     break;
                 default:
                     return new TFExtractor(); ;

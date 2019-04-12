@@ -62,7 +62,7 @@ namespace KSR.Extractors
                 Dictionary<string, double> tempFeatures = new Dictionary<string, double>();
                 foreach (var key in article.Feature.Keys)
                 {
-                    TFfactor = article.Feature[key] / numberOfTermsInDocument;
+                    TFfactor = (article.Feature[key] / numberOfTermsInDocument) * 1.0;
                     tempFeatures.Add(key, TFfactor);
                 }
                 tfExtractedData.Add(new DataFeatureDictionary(article.Label, tempFeatures, ""));

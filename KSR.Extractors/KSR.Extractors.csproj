@@ -42,6 +42,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IExtractor.cs" />
+    <Compile Include="KeyWordsExtractor.cs" />
+    <Compile Include="NGramExtractor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TFExtractor.cs" />
     <Compile Include="TFIDEExtractor.cs" />

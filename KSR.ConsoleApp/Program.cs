@@ -31,9 +31,12 @@ namespace KSR.ConsoleApp
 
             //TODO 1. select data to read from and load it. 
             ConfigLoader Config = new ConfigLoader();
-            string filePath =$"{Directory.GetCurrentDirectory()}\\..\\..\\..\\data\\reut2-000.sgm";
+            string directoryPath =$"{Directory.GetCurrentDirectory()}\\..\\..\\..\\data\\";
+            string searchPattern = "*.sgm";
+
+            IEnumerable<string> filesInDirectory = Directory.EnumerateFiles(directoryPath, searchPattern);
             string[] filteredLabel = new[] { "west-germany", "usa", "france", "uk", "canada", "japan"};
-            var tmp = DataGetter.ReadDataSetItems(filePath, "PLACES", filteredLabel);
+            var tmp = DataGetter.ReadDataSetItems(filesInDirectory, "PLACES", filteredLabel);
             Porter2Stemmer stemmer = new Porter2Stemmer();
             var filtered = tmp.Select(s => DataPreprocessingTool.PreprocessText(s)).ToList();
             IExtractor extractor = Config.Extractor;

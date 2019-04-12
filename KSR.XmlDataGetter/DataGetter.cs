@@ -11,68 +11,73 @@ namespace KSR.XmlDataGetter
 {
     public class DataGetter
     {
-        public static List<DataSetItem> ReadDataSetItems(string pathFile, string labelTitle, string[] labelFilterConditions)
+        public static List<DataSetItem> ReadDataSetItems(IEnumerable<string> files, string labelTitle, string[] labelFilterConditions)
         {
             List<DataSetItem> dataSet = new List<DataSetItem>();
             List<Label> labels = new List<Label>();
             bool isLabeled = false;
-            if (!File.Exists(pathFile))
+            foreach (string file in files)
             {
-                throw new Exception("File does not exists");
-            }
-
-            using (var reader = new XmlTextReader(pathFile)) 
-            {
-                while (reader.Read())
+                if (!File.Exists(file))
                 {
-                    if (reader.NodeType == XmlNodeType.Element)
+                    throw new Exception("File does not exists");
+                }
+
+                using (var reader = new XmlTextReader(file))
+                {
+                    while (reader.Read())
                     {
-                        if (string.Equals(reader.Name, labelTitle, StringComparison.InvariantCultureIgnoreCase))
+                        if (reader.NodeType == XmlNodeType.Element)
                         {
-                            labels = new List<Label>();
-                            isLabeled = false;
-                            while (reader.Read())
+                            if (string.Equals(reader.Name, labelTitle, StringComparison.InvariantCultureIgnoreCase))
                             {
-                                while (reader.Name.ToUpperInvariant() == "D")
+                                labels = new List<Label>();
+                                isLabeled = false;
+                                while (reader.Read())
                                 {
-                                    reader.Read();
-                                }
+                                    while (reader.Name.ToUpperInvariant() == "D")
+                                    {
+                                        reader.Read();
+                                    }
 
-                                if (!string.IsNullOrWhiteSpace(reader.Value) && labelFilterConditions.Any(l => l == reader.Value))
-                                {
-                                    labels.Add(new Label(reader.Value));
-                                    isLabeled = true;
-                                }
+                                    if (!string.IsNullOrWhiteSpace(reader.Value) &&
+                                        labelFilterConditions.Any(l => l == reader.Value))
+                                    {
+                                        labels.Add(new Label(reader.Value));
+                                        isLabeled = true;
+                                    }
 
-                                if (reader.NodeType == XmlNodeType.EndElement && string.Equals(reader.Name,
-                                        $"{labelTitle}", StringComparison.InvariantCultureIgnoreCase))
-                                {
-                                    break;
+                                    if (reader.NodeType == XmlNodeType.EndElement && string.Equals(reader.Name,
+                                            $"{labelTitle}", StringComparison.InvariantCultureIgnoreCase))
+                                    {
+                                        break;
+                                    }
                                 }
                             }
-                        }
 
-                        if (reader.Name.ToUpperInvariant() == "TITLE")
-                        {
-                            reader.Read();
-                            string title = reader.Value;
-                            string dateline = ReadElem(reader, "DATELINE");
-                            string body = ReadElem(reader, "BODY");
-                            if (title != null && dateline != null && body != null)
+                            if (reader.Name.ToUpperInvariant() == "TITLE")
                             {
-                                if (!labels.Any())
+                                reader.Read();
+                                string title = reader.Value;
+                                string dateline = ReadElem(reader, "DATELINE");
+                                string body = ReadElem(reader, "BODY");
+                                if (title != null && dateline != null && body != null)
                                 {
-                                    labels.Add(new Label("UNKNOWN"));
+                                    if (!labels.Any())
+                                    {
+                                        labels.Add(new Label("UNKNOWN"));
+                                    }
+
+                                    if (isLabeled)
+                                        dataSet.Add(new DataSetItem(new DataArticle(title, dateline, body),
+                                            new DataLabels(labels)));
                                 }
-                                
-                                if(isLabeled)
-                                    dataSet.Add(new DataSetItem(new DataArticle(title, dateline, body), new DataLabels(labels)));
                             }
                         }
                     }
                 }
             }
-            
+
             return dataSet;
         }
 
