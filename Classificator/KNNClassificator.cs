@@ -50,12 +50,15 @@ namespace Classificator
                     ));
             }
 
+            label_Distances.Sort((prev, next) => prev.distance.CompareTo(next.distance));
+
             //take only this distances limited by k param
+            label_Distances = label_Distances.Take(k).ToList();
 
             //TODO check!!!
-            var grouped_Labels = label_Distances.OrderBy((label_distance) => label_distance.distance).Take(k)
-                .GroupBy(l_d => l_d.label).Select(d => d.ToList()).ToList();
+            var grouped_Labels = label_Distances.GroupBy(l_d => l_d.label).Select(d => d.ToList()).ToList();
             grouped_Labels.Sort((prev, next) => prev.Count.CompareTo(next.Count));
+            grouped_Labels.Reverse();
 
             classifiedData = new DataFeatureDictionary(testingData.Label, testingData.Feature, grouped_Labels[0].First().label);
 

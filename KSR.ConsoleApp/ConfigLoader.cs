@@ -16,7 +16,7 @@ namespace KSR.ConsoleApp
         public string Sources { get; }
         public string Label { get; }
         public List<string> Labels { get; }
-        public int K { get; }
+        public int K { get; set; }
         public double TrainingSetPercentage { get; set; }
         public double TestingSetPercentage { get; set; }
         public IMetric Metric { get; set; }
@@ -72,6 +72,15 @@ namespace KSR.ConsoleApp
             }
         }
 
-        
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("Metric: " + Metric.ToString());
+            sb.AppendLine("Extractor: " + Extractor.ToString());
+            sb.AppendLine("K: " + K.ToString());
+            sb.AppendLine("N: " + N.ToString());
+
+            return sb.ToString();
+        }
     }
 }
