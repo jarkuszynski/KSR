@@ -81,6 +81,75 @@ namespace KSR.XmlDataGetter
             return dataSet;
         }
 
+        public static List<DataSetItem> ReadDataSetItems(IEnumerable<string> files, string labelTitle)
+        {
+            List<DataSetItem> dataSet = new List<DataSetItem>();
+            List<Label> labels = new List<Label>();
+            bool isLabeled = false;
+            foreach (string file in files)
+            {
+                if (!File.Exists(file))
+                {
+                    throw new Exception("File does not exists");
+                }
+
+                using (var reader = new XmlTextReader(file))
+                {
+                    while (reader.Read())
+                    {
+                        if (reader.NodeType == XmlNodeType.Element)
+                        {
+                            if (string.Equals(reader.Name, labelTitle, StringComparison.InvariantCultureIgnoreCase))
+                            {
+                                labels = new List<Label>();
+                                isLabeled = false;
+                                while (reader.Read())
+                                {
+                                    while (reader.Name.ToUpperInvariant() == "D")
+                                    {
+                                        reader.Read();
+                                    }
+
+                                    if (!string.IsNullOrWhiteSpace(reader.Value))
+                                    {
+                                        labels.Add(new Label(reader.Value));
+                                        isLabeled = true;
+                                    }
+
+                                    if (reader.NodeType == XmlNodeType.EndElement && string.Equals(reader.Name,
+                                            $"{labelTitle}", StringComparison.InvariantCultureIgnoreCase))
+                                    {
+                                        break;
+                                    }
+                                }
+                            }
+
+                            if (reader.Name.ToUpperInvariant() == "TITLE")
+                            {
+                                reader.Read();
+                                string title = reader.Value;
+                                string dateline = ReadElem(reader, "DATELINE");
+                                string body = ReadElem(reader, "BODY");
+                                if (title != null && dateline != null && body != null)
+                                {
+                                    if (!labels.Any())
+                                    {
+                                        labels.Add(new Label("UNKNOWN"));
+                                    }
+
+                                    if (isLabeled)
+                                        dataSet.Add(new DataSetItem(new DataArticle(title, dateline, body),
+                                            new DataLabels(labels)));
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            return dataSet;
+        }
+
         public static string ReadElem(XmlTextReader reader, string elementTitle)
         {
             bool isReading = true;

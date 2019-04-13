@@ -43,6 +43,12 @@ namespace KSR.ConsoleApp
                 case "euclidean":
                     return new EuclideanMetric();
                     break;
+                case "chebyshev":
+                    return new ChebyshevMetric();
+                    break;
+                case "manhattan":
+                    return new ManhattanMetric();
+                    break;
                 default:
                     return new EuclideanMetric();
                     break;

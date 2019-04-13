@@ -66,20 +66,22 @@ namespace KSR.ConsoleApp
 
             IEnumerable<string> filesInDirectory = Directory.EnumerateFiles(directoryPath, searchPattern);
             string[] filteredLabel = new[] { "west-germany", "usa", "france", "uk", "canada", "japan" };
-            Dictionary<string, int> matrixIndexes = new Dictionary<string, int>();
-            int index = 0;
-            foreach (var label in filteredLabel)
+
+            List<DataSetItem> tmp = new List<DataSetItem>();
+            if (Config.Label == "PLACES")
             {
-                matrixIndexes.Add(label, index);
-                index++;
+                tmp = DataGetter.ReadDataSetItems(filesInDirectory, Config.Label, filteredLabel);
+
+            }
+            else if ( Config.Label == "TOPICS")
+            {
+                tmp = DataGetter.ReadDataSetItems(filesInDirectory, Config.Label);
+
             }
 
-            
-
-
-            var tmp = DataGetter.ReadDataSetItems(filesInDirectory, "PLACES", filteredLabel);
             Porter2Stemmer stemmer = new Porter2Stemmer();
             var filtered = tmp.Select(s => DataPreprocessingTool.PreprocessText(s)).ToList();
+            
             IExtractor extractor = Config.Extractor;
             IMetric metric = Config.Metric;
             int k = Config.K;
@@ -88,8 +90,16 @@ namespace KSR.ConsoleApp
             double testingDataPercentage = Config.TestingSetPercentage;
             filtered = filtered.GetRange(0, 500);
             var preprocessedData = extractor.extractFeatureDictionary(filtered);
+            string[] distingushLabels = preprocessedData.Select(d => d.Label).Distinct().ToArray();
+           
+            Dictionary<string, int> matrixIndexes = new Dictionary<string, int>();
+            int index = 0;
+            foreach (var label in distingushLabels)
+            {
+                matrixIndexes.Add(label, index);
+                index++;
+            }
 
-            preprocessedData = preprocessedData.Where(p => p.Label != "UNKNOWN").ToList();
             var training = preprocessedData.GetRange(0, (int)(preprocessedData.Count * Config.TrainingSetPercentage));
             var testing = preprocessedData.GetRange((int)(preprocessedData.Count * Config.TrainingSetPercentage), (int)(preprocessedData.Count * testingDataPercentage));
 
@@ -163,11 +173,11 @@ namespace KSR.ConsoleApp
                         Stopwatch classificationTime = Stopwatch.StartNew();
 
                         List<DataFeatureDictionary> classified = new List<DataFeatureDictionary>();
-                        int[,] ConfusionMarix = new int[filteredLabel.Length, filteredLabel.Length];
+                        int[,] ConfusionMarix = new int[distingushLabels.Length, distingushLabels.Length];
                         int TTPall = 0;
 
                         List<ConfusionParams> ConfusionList = new List<ConfusionParams>();
-                        foreach (var label in filteredLabel)
+                        foreach (var label in distingushLabels)
                         {
                             ConfusionList.Add(new ConfusionParams(matrixIndexes[label]));
                         }
