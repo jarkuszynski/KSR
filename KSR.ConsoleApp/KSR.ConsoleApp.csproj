@@ -65,10 +65,6 @@
       <Project>{7C22856D-5DC2-466F-BEBF-3DE73374563C}</Project>
       <Name>KSR.Extractors</Name>
     </ProjectReference>
-    <ProjectReference Include="..\KSR.Metrics\KSR.Metrics.csproj">
-      <Project>{0C71C5E4-BEC8-490F-B2FE-8ADCCF1ACD11}</Project>
-      <Name>KSR.Metrics</Name>
-    </ProjectReference>
     <ProjectReference Include="..\KSR.XmlDataGetter\KSR.XmlDataGetter.csproj">
       <Project>{203da035-cffc-4091-85ab-7238b1d5b06f}</Project>
       <Name>KSR.XmlDataGetter</Name>

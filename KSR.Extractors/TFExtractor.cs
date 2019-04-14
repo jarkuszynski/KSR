@@ -16,61 +16,99 @@ namespace KSR.Extractors
         {
 
         }
-        public List<DataFeatureDictionary> extractFeatureDictionary(List<PreprocessedDataSetItem> PreprocessedDataSetItems)
+        public double[] extractFeatureDictionary(PreprocessedDataSetItem PreprocessedDataItem, List<string> keyWords)
         {
             List<DataFeatureDictionary> extractedData = new List<DataFeatureDictionary>();
-           
-            /*
-             1. Take every article from dataSetItems
-             2. array: Prepare them to have plain array of words lowercase and after Lemization, without stopwords
-             3. take array and create from this DataFeatureDictionary
-             */
-             // label TODO
 
-            //TODO TF is when we calculate N/n <- change that! 
             List<string> tempWordsFromArticle = new List<string>(); // wszystkie slowa z 1 artykulu, ktory jest przefiltrowan
-            foreach (var articleWithLabel in PreprocessedDataSetItems)
+
+            DataFeatureDictionary extractedDataItem = new DataFeatureDictionary();
+            tempWordsFromArticle = new List<string>();
+            tempWordsFromArticle = PreprocessedDataItem.ProcessedWords; //TODO change body to List<string>
+
+
+            foreach (string word in tempWordsFromArticle)
             {
-                DataFeatureDictionary tempDictionary = new DataFeatureDictionary();
-                tempWordsFromArticle = new List<string>();
-                tempWordsFromArticle = articleWithLabel.ProcessedWords; //TODO change body to List<string>
-
-                foreach (string word in tempWordsFromArticle)
+                if (extractedDataItem.Feature.ContainsKey(word))
                 {
-                    if (tempDictionary.Feature.ContainsKey(word))
-                    {
-                        tempDictionary.Feature[word] = tempDictionary.Feature[word] + 1.0;
-                    }
-                    else
-                    {
-                        tempDictionary.Feature.Add(word, 1.0);
-                    }
+                    extractedDataItem.Feature[word] = extractedDataItem.Feature[word] + 1.0;
                 }
-                tempDictionary.Label = articleWithLabel.Labels.ElementAt(0).Value;
-                extractedData.Add(tempDictionary);
+                else
+                {
+                    extractedDataItem.Feature.Add(word, 1.0);
+                }
             }
+            extractedDataItem.Label = PreprocessedDataItem.Labels.ElementAt(0).Value;
 
 
-            //TODO FIX Changing the same collection wtf!!!!
-            
+
             List<DataFeatureDictionary> tfExtractedData = new List<DataFeatureDictionary>();
-            double TFfactor= 0.0;
-            foreach (var article in extractedData)
+            DataFeatureDictionary article = new DataFeatureDictionary();
+            double TFfactor = 0.0;
+            int numberOfTermsInDocument = extractedDataItem.Feature.Count;
+
+            Dictionary<string, double> tempFeatures = new Dictionary<string, double>();
+            foreach (var key in extractedDataItem.Feature.Keys)
             {
-                int numberOfTermsInDocument = article.Feature.Count;
-
-                Dictionary<string, double> tempFeatures = new Dictionary<string, double>();
-                foreach (var key in article.Feature.Keys)
-                {
-                    TFfactor = (article.Feature[key] / numberOfTermsInDocument) * 1.0;
-                    tempFeatures.Add(key, TFfactor);
-                }
-                tfExtractedData.Add(new DataFeatureDictionary(article.Label, tempFeatures, ""));
-
+                TFfactor = (extractedDataItem.Feature[key] / numberOfTermsInDocument) * 1.0;
+                tempFeatures.Add(key, TFfactor);
             }
+            article = new DataFeatureDictionary(extractedDataItem.Label, tempFeatures, "");
 
-            
-            return tfExtractedData;
+            //TODO count vector
+            double[] extractedVector = new double[keyWords.Count];
+            int index = 0;
+            foreach (var word in keyWords)
+            {
+                double defaultValue = 0.0; 
+                if(article.Feature.TryGetValue(word, out defaultValue))
+                {
+                    extractedVector[index] = defaultValue;
+                }
+                index++;
+            }
+            return extractedVector;
         }
+
+        public DataFeatureDictionary getPreparedData(PreprocessedDataSetItem PreprocessedDataItem, List<string> keyWords)
+        {
+            List<DataFeatureDictionary> extractedData = new List<DataFeatureDictionary>();
+
+            List<string> tempWordsFromArticle = new List<string>(); // wszystkie slowa z 1 artykulu, ktory jest przefiltrowan
+
+            DataFeatureDictionary extractedDataItem = new DataFeatureDictionary();
+            tempWordsFromArticle = new List<string>();
+            tempWordsFromArticle = PreprocessedDataItem.ProcessedWords; //TODO change body to List<string>
+
+
+            foreach (string word in tempWordsFromArticle)
+            {
+                if (extractedDataItem.Feature.ContainsKey(word))
+                {
+                    extractedDataItem.Feature[word] = extractedDataItem.Feature[word] + 1.0;
+                }
+                else
+                {
+                    extractedDataItem.Feature.Add(word, 1.0);
+                }
+            }
+            extractedDataItem.Label = PreprocessedDataItem.Labels.ElementAt(0).Value;
+
+
+
+            List<DataFeatureDictionary> tfExtractedData = new List<DataFeatureDictionary>();
+            DataFeatureDictionary article = new DataFeatureDictionary();
+            double TFfactor = 0.0;
+            int numberOfTermsInDocument = extractedDataItem.Feature.Count;
+
+            Dictionary<string, double> tempFeatures = new Dictionary<string, double>();
+            foreach (var key in extractedDataItem.Feature.Keys)
+            {
+                TFfactor = (extractedDataItem.Feature[key] / numberOfTermsInDocument) * 1.0;
+                tempFeatures.Add(key, TFfactor);
+            }
+            return article = new DataFeatureDictionary(extractedDataItem.Label, tempFeatures, "");
+        }
+
     }
 }

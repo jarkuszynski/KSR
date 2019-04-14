@@ -150,6 +150,37 @@ namespace KSR.XmlDataGetter
             return dataSet;
         }
 
+        public static List<DataSetItem> ReadCSVDataSet(string file)
+        {
+            List<DataSetItem> dataSet = new List<DataSetItem>();
+            if (!File.Exists(file))
+            {
+                throw new Exception("File does not exists");
+            }
+
+            using (var reader = new StreamReader(file))
+            {
+                List<string> topics = new List<string>();
+                List<string> text = new List<string>();
+                while (!reader.EndOfStream)
+                {
+                    var line = reader.ReadLine();
+                    var values = line.Split(',');
+                    List<Label> labels = new List<Label>();
+
+                    topics.Add(values[0]);
+                    text.Add(values[1]);
+                    labels.Add(new Label(values[0]));
+                    dataSet.Add(new DataSetItem(new DataArticle("", "", values[1]),
+                                            new DataLabels(labels)));
+                }
+
+            }
+            
+
+            return dataSet;
+        }
+
         public static string ReadElem(XmlTextReader reader, string elementTitle)
         {
             bool isReading = true;

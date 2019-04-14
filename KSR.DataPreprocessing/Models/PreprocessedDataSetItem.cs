@@ -12,10 +12,13 @@ namespace KSR.DataPreprocessing.Models
         public List<Label> Labels { get; set; }
         public List<string> ProcessedWords { get; set; }
 
-        public PreprocessedDataSetItem(List<Label> labels, List<string> processedWords)
+        public string ClassifiedLabel { get; set; }
+
+        public PreprocessedDataSetItem(List<Label> labels, List<string> processedWords, string classifiedLabel ="")
         {
             Labels = labels;
             ProcessedWords = processedWords;
+            ClassifiedLabel = classifiedLabel;
         }
         public PreprocessedDataSetItem(Label label)
         {

@@ -41,13 +41,22 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FeatureVector.cs" />
     <Compile Include="KNNClassificator.cs" />
+    <Compile Include="Metrics\ChebyshevMetric.cs" />
+    <Compile Include="Metrics\EuclideanMetric.cs" />
+    <Compile Include="Metrics\IMetric.cs" />
+    <Compile Include="Metrics\ManhattanMetric.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\KSR.Metrics\KSR.Metrics.csproj">
-      <Project>{0C71C5E4-BEC8-490F-B2FE-8ADCCF1ACD11}</Project>
-      <Name>KSR.Metrics</Name>
+    <ProjectReference Include="..\KSR.DataPreprocessing\KSR.DataPreprocessing.csproj">
+      <Project>{EDF0C39F-0B63-420C-B9BB-FC64183680AF}</Project>
+      <Name>KSR.DataPreprocessing</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\KSR.Extractors\KSR.Extractors.csproj">
+      <Project>{7C22856D-5DC2-466F-BEBF-3DE73374563C}</Project>
+      <Name>KSR.Extractors</Name>
     </ProjectReference>
     <ProjectReference Include="..\KSR.XmlDataGetter\KSR.XmlDataGetter.csproj">
       <Project>{203DA035-CFFC-4091-85AB-7238B1D5B06F}</Project>

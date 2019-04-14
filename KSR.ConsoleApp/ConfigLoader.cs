@@ -5,7 +5,7 @@ using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using KSR.Metrics;
+using KSR.Classificator.Metrics;
 using KSR.Extractors;
 
 
@@ -67,9 +67,6 @@ namespace KSR.ConsoleApp
                     break;
                 case "NGRAM":
                     return new NGramExtractor(N);
-                    break;
-                case "KEYWORDS":
-                    return new KeyWordsExtractor();
                     break;
                 default:
                     return new TFExtractor(); ;

@@ -10,6 +10,6 @@ namespace KSR.Extractors
 {
     public interface IExtractor
     {
-         List<DataFeatureDictionary> extractFeatureDictionary(List<PreprocessedDataSetItem> PreprocessedDataSetItems);
+         double[] extractFeatureDictionary(PreprocessedDataSetItem PreprocessedDataSetItems, List<string> keyWords);
     }
 }

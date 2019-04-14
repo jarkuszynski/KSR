@@ -1,4 +1,6 @@
-﻿using KSR.Metrics;
+﻿using KSR.Classificator.Metrics;
+using KSR.DataPreprocessing.Models;
+using KSR.Extractors;
 using KSR.XmlDataGetter.Models;
 using System;
 using System.Collections.Generic;
@@ -27,26 +29,41 @@ namespace Classificator
          3. for each element in testing data count distance to each training data - sort it ascendly 
          4. take label from the nearest neighbous and writes it to testing data entity
          */
-        private List<DataFeatureDictionary> trainingData = new List<DataFeatureDictionary>();
+        private List<PreprocessedDataSetItem> ColdStart = new List<PreprocessedDataSetItem>();
+        private List<FeatureVector> TrainingFeatureVectors = new List<FeatureVector>();
         private int k;
         private IMetric metric;
+        private IExtractor extractor;
+        private List<string> KeyWords = new List<string>();
 
-        public KNNClassificator(List<DataFeatureDictionary> trainingData,int k,IMetric metric)
+        public KNNClassificator(List<PreprocessedDataSetItem> coldStart,int k,IMetric metric, List<string> keyWords, IExtractor extractor)
         {
-            this.trainingData = trainingData;
+            ColdStart = coldStart;
             this.k = k;
             this.metric = metric;
+            this.extractor = extractor;
+            KeyWords = keyWords;
+            InitializeTrainingFeatureVectors();
         }
 
-        public DataFeatureDictionary classify(DataFeatureDictionary testingData)
+        private void InitializeTrainingFeatureVectors()
         {
-            DataFeatureDictionary classifiedData = new DataFeatureDictionary();
+            foreach (var item in ColdStart)
+            {
+                TrainingFeatureVectors.Add(new FeatureVector(item.Labels[0].Value, extractor.extractFeatureDictionary(item, KeyWords)));
+            }
+        }
+
+        public PreprocessedDataSetItem classify(PreprocessedDataSetItem testingData)
+        {
+
+            FeatureVector testingVector = new FeatureVector(testingData.Labels[0].Value, extractor.extractFeatureDictionary(testingData, KeyWords));
 
             List<Label_Distance> label_Distances = new List<Label_Distance>();
-            foreach (var dataFeatureEntity in trainingData)
+            foreach (var trainingVector in TrainingFeatureVectors)
             {
-                label_Distances.Add(new Label_Distance(dataFeatureEntity.Label,
-                    metric.getDistance(testingData, dataFeatureEntity)
+                label_Distances.Add(new Label_Distance(trainingVector.Label,
+                    metric.getDistance(testingVector, trainingVector)
                     ));
             }
 
@@ -60,7 +77,7 @@ namespace Classificator
             grouped_Labels.Sort((prev, next) => prev.Count.CompareTo(next.Count));
             grouped_Labels.Reverse();
 
-            classifiedData = new DataFeatureDictionary(testingData.Label, testingData.Feature, grouped_Labels[0].First().label);
+            PreprocessedDataSetItem classifiedData = new PreprocessedDataSetItem(testingData.Labels, testingData.ProcessedWords, grouped_Labels[0].First().label);
 
 
             return classifiedData;

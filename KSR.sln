@@ -13,8 +13,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KSR.DataPreprocessing", "KS
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KSR.Extractors", "KSR.Extractors\KSR.Extractors.csproj", "{7C22856D-5DC2-466F-BEBF-3DE73374563C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KSR.Metrics", "KSR.Metrics\KSR.Metrics.csproj", "{0C71C5E4-BEC8-490F-B2FE-8ADCCF1ACD11}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KSR.Classificator", "Classificator\KSR.Classificator.csproj", "{20514387-78EE-4112-ABFC-157A11B3779A}"
 EndProject
 Global
@@ -43,10 +41,6 @@ Global
 		{7C22856D-5DC2-466F-BEBF-3DE73374563C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7C22856D-5DC2-466F-BEBF-3DE73374563C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7C22856D-5DC2-466F-BEBF-3DE73374563C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0C71C5E4-BEC8-490F-B2FE-8ADCCF1ACD11}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0C71C5E4-BEC8-490F-B2FE-8ADCCF1ACD11}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0C71C5E4-BEC8-490F-B2FE-8ADCCF1ACD11}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0C71C5E4-BEC8-490F-B2FE-8ADCCF1ACD11}.Release|Any CPU.Build.0 = Release|Any CPU
 		{20514387-78EE-4112-ABFC-157A11B3779A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{20514387-78EE-4112-ABFC-157A11B3779A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{20514387-78EE-4112-ABFC-157A11B3779A}.Release|Any CPU.ActiveCfg = Release|Any CPU

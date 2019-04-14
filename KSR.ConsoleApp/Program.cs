@@ -11,9 +11,10 @@ using System.Collections.Specialized;
 using System.IO;
 using KSR.Extractors;
 using Classificator;
-using KSR.Metrics;
+using KSR.Classificator.Metrics;
 using KSR.XmlDataGetter.Models;
 using System.Diagnostics;
+using KSR.DataPreprocessing.Models;
 
 namespace KSR.ConsoleApp
 {
@@ -62,12 +63,23 @@ namespace KSR.ConsoleApp
             Console.WriteLine("Initalization, please wait a minute....");
             ConfigLoader Config = new ConfigLoader();
             string directoryPath = $"{Directory.GetCurrentDirectory()}\\..\\..\\..\\data\\";
-            string searchPattern = "*.sgm";
+            string searchPattern = "";
 
-            IEnumerable<string> filesInDirectory = Directory.EnumerateFiles(directoryPath, searchPattern);
+            
             string[] filteredLabel = new[] { "west-germany", "usa", "france", "uk", "canada", "japan" };
 
             List<DataSetItem> tmp = new List<DataSetItem>();
+            if (Config.Sources == "reuters")
+            {
+                searchPattern = "*.sgm";
+            }
+            else if (Config.Sources == "custom")
+            {
+                searchPattern = "*.csv";
+            }
+
+            IEnumerable<string> filesInDirectory = Directory.EnumerateFiles(directoryPath, searchPattern);
+
             if (Config.Label == "PLACES")
             {
                 tmp = DataGetter.ReadDataSetItems(filesInDirectory, Config.Label, filteredLabel);
@@ -75,13 +87,16 @@ namespace KSR.ConsoleApp
             }
             else if ( Config.Label == "TOPICS")
             {
-                tmp = DataGetter.ReadDataSetItems(filesInDirectory, Config.Label);
-
+                if (searchPattern != "*.csv")
+                    tmp = DataGetter.ReadDataSetItems(filesInDirectory, Config.Label);
+                else
+                    tmp = DataGetter.ReadCSVDataSet(filesInDirectory.ElementAt(0));
+                
             }
 
             Porter2Stemmer stemmer = new Porter2Stemmer();
             var filtered = tmp.Select(s => DataPreprocessingTool.PreprocessText(s)).ToList();
-            
+
             IExtractor extractor = Config.Extractor;
             IMetric metric = Config.Metric;
             int k = Config.K;
@@ -89,9 +104,20 @@ namespace KSR.ConsoleApp
             double trainingDataPercentage = Config.TrainingSetPercentage;
             double testingDataPercentage = Config.TestingSetPercentage;
             filtered = filtered.GetRange(0, 500);
-            var preprocessedData = extractor.extractFeatureDictionary(filtered);
-            string[] distingushLabels = preprocessedData.Select(d => d.Label).Distinct().ToArray();
-           
+
+            var training = filtered.GetRange(0, (int)(filtered.Count * Config.TrainingSetPercentage));
+            var testing = filtered.GetRange((int)(filtered.Count * Config.TrainingSetPercentage), (int)(filtered.Count * testingDataPercentage));
+
+            MostCommonKeyWordsExtractor most = new MostCommonKeyWordsExtractor();
+            List<string> keyWords = most.getAllKeyWords(filtered);
+
+            var knn = new KNNClassificator(training, Config.K, Config.Metric, keyWords, Config.Extractor);
+
+            
+            ///////////////////////////////////////////////////////////////////////////
+
+            string[] distingushLabels = most.Labels.ToArray();
+
             Dictionary<string, int> matrixIndexes = new Dictionary<string, int>();
             int index = 0;
             foreach (var label in distingushLabels)
@@ -100,13 +126,7 @@ namespace KSR.ConsoleApp
                 index++;
             }
 
-            var training = preprocessedData.GetRange(0, (int)(preprocessedData.Count * Config.TrainingSetPercentage));
-            var testing = preprocessedData.GetRange((int)(preprocessedData.Count * Config.TrainingSetPercentage), (int)(preprocessedData.Count * testingDataPercentage));
-
-            KNNClassificator knn = new KNNClassificator(training, Config.K, Config.Metric);
-
-
-            Console.WriteLine("\n1. Change extractor");
+            Console.WriteLine("\n1. Change extractor - invalid, restart program");
             Console.WriteLine("\n2. Change metric");
             Console.WriteLine("\n3. Change K number - neighbours");
             Console.WriteLine("\n4. Change N number");
@@ -121,7 +141,7 @@ namespace KSR.ConsoleApp
                 switch (key)
                 {
                     case '1':
-                        Console.WriteLine("\nTF-a, TFIDE-b, NGram-c, KeyWords-d\n");
+                        //Console.WriteLine("\nTF-a, TFIDE-b, NGram-c, KeyWords-d\n");
                         break;
                     case '2':
                         Console.WriteLine("\nChebyshev metric-e, Manhattan-f, Euclidean-g\n");
@@ -138,33 +158,34 @@ namespace KSR.ConsoleApp
                         Config.Extractor = new NGramExtractor(Config.N);
                         extractor = Config.Extractor;
                         break;
-                    case 'd':
-                        Config.Extractor = new KeyWordsExtractor();
-                        extractor = Config.Extractor;
-                        break;
                     case 'e':
                         Config.Metric = new ChebyshevMetric();
                         metric = Config.Metric;
+                        knn = new KNNClassificator(training, Config.K, Config.Metric, keyWords, Config.Extractor);
                         break;
                     case 'f':
                         Config.Metric = new ManhattanMetric();
                         metric = Config.Metric;
+                        knn = new KNNClassificator(training, Config.K, Config.Metric, keyWords, Config.Extractor);
                         break;
                     case 'g':
                         Config.Metric = new EuclideanMetric();
                         metric = Config.Metric;
+                        knn = new KNNClassificator(training, Config.K, Config.Metric, keyWords, Config.Extractor);
                         break;
                     case '3':
                         Console.WriteLine("\nProvide number representing K neighbours - 9 is default\n");
                         int defaultK = 9;
                         int neighbourhood = int.TryParse(Console.ReadLine(), out defaultK) ? defaultK : 9;
                         Config.K = neighbourhood;
+                        knn = new KNNClassificator(training, Config.K, Config.Metric, keyWords, Config.Extractor);
                         break;
                     case '4':
                         Console.WriteLine("\nProvide number representing N in Ngram - 3 is default\n");
                         int defaultN = 3;
                         int nGram = int.TryParse(Console.ReadLine(), out defaultN) ? defaultN : 9;
                         Config.N = nGram;
+                        knn = new KNNClassificator(training, Config.K, Config.Metric, keyWords, Config.Extractor);
                         break;
                     case '5':
                         ////////////////////////////// core of program
@@ -172,7 +193,17 @@ namespace KSR.ConsoleApp
                         Console.WriteLine("++++++++++CLASSIFICATION STARTED++++++++++");
                         Stopwatch classificationTime = Stopwatch.StartNew();
 
-                        List<DataFeatureDictionary> classified = new List<DataFeatureDictionary>();
+                        List<PreprocessedDataSetItem> classified = new List<PreprocessedDataSetItem>();
+                        foreach (var testItem in testing)
+                        {
+                            classified.Add(knn.classify(testItem));
+                        }
+                        classificationTime.Stop();
+
+                        foreach (var item in classified)
+                        {
+                            Console.WriteLine(item.ClassifiedLabel + " = " + item.Labels[0].Value);
+                        }
                         int[,] ConfusionMarix = new int[distingushLabels.Length, distingushLabels.Length];
                         int TTPall = 0;
 
@@ -182,25 +213,19 @@ namespace KSR.ConsoleApp
                             ConfusionList.Add(new ConfusionParams(matrixIndexes[label]));
                         }
 
-                        foreach (var test in testing)
-                        {
-                            classified.Add(knn.classify(test));
-                        }
-                        classificationTime.Stop();
+                        
                         foreach (var item in classified)
                         {
-                            if (item.ClassifiedLabel == item.Label) TTPall++;
+                            if (item.ClassifiedLabel == item.Labels[0].Value) TTPall++;
 
                             ConfusionMarix = incrementConfusionMatrix(ConfusionMarix, item, matrixIndexes);
                         }
                         //classified = classified.Where(p => p.ClassifiedLabel != "usa").ToList();
 
                         StringBuilder classificationResults = new StringBuilder();
-                        IExtractor kwd = new KeyWordsExtractor();
-                        kwd.extractFeatureDictionary(filtered);
-                        for (int t = 0; t < 6; t++)
+                        for (int t = 0; t < ConfusionMarix.GetLength(0); t++)
                         {
-                            for (int j = 0; j < 6; j++)
+                            for (int j = 0; j < ConfusionMarix.GetLength(1); j++)
                             {
                                 Console.Write(" | " + ConfusionMarix[t, j] + " | ");
                             }
@@ -246,7 +271,7 @@ namespace KSR.ConsoleApp
                             label.CountRecall(TTPall);
                             label.CountSpecificity(TTPall, TTNall);
                         }
-                        double OverallAccurency = (1.0*TTPall) / testing.Capacity;
+                        double OverallAccurency = (1.0 * TTPall) / testing.Capacity;
                         double OverallSpecificity = 0.0;
                         foreach (var label in ConfusionList)
                         {
@@ -285,9 +310,9 @@ namespace KSR.ConsoleApp
             } while (key != 'q');
 
 
-            int[,] incrementConfusionMatrix(int[,] confusionMatrix, DataFeatureDictionary classifiedArticle, Dictionary<string, int> indexMatrix)
+            int[,] incrementConfusionMatrix(int[,] confusionMatrix, PreprocessedDataSetItem classifiedArticle, Dictionary<string, int> indexMatrix)
             {
-                confusionMatrix[indexMatrix[classifiedArticle.Label], indexMatrix[classifiedArticle.ClassifiedLabel]]++;
+                confusionMatrix[indexMatrix[classifiedArticle.Labels[0].Value], indexMatrix[classifiedArticle.ClassifiedLabel]]++;
                 return confusionMatrix;
             }
         }

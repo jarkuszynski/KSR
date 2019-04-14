@@ -47,5 +47,10 @@ namespace KSR.Extractors
 
             return extractedData;
         }
+
+        public double[] extractFeatureDictionary(PreprocessedDataSetItem PreprocessedDataSetItems, List<string> keyWords)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
