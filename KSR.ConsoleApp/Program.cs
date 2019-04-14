@@ -151,10 +151,6 @@ namespace KSR.ConsoleApp
                         extractor = Config.Extractor;
                         break;
                     case 'b':
-                        Config.Extractor = new TFIDEExtractor();
-                        extractor = Config.Extractor;
-                        break;
-                    case 'c':
                         Config.Extractor = new NGramExtractor(Config.N);
                         extractor = Config.Extractor;
                         break;

@@ -62,11 +62,11 @@ namespace KSR.ConsoleApp
                 case "TF":
                     return new TFExtractor();
                     break;
-                case "TFIDE":
-                    return new TFIDEExtractor();
-                    break;
                 case "NGRAM":
                     return new NGramExtractor(N);
+                    break;
+                case "COUNT":
+                    return new CountExtractor();
                     break;
                 default:
                     return new TFExtractor(); ;

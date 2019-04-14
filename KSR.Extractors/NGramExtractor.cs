@@ -16,41 +16,46 @@ namespace KSR.Extractors
             N = n;
         }
 
-        public List<DataFeatureDictionary> extractFeatureDictionary(List<PreprocessedDataSetItem> PreprocessedDataSetItems)
-        {
-            List<DataFeatureDictionary> extractedData = new List<DataFeatureDictionary>();
-            
-            foreach (PreprocessedDataSetItem preprocessedDataSetItem in PreprocessedDataSetItems)
-            {
-                Dictionary<string, double> tempDictionary = new Dictionary<string, double>();
-                string connectedWords = string.Join("", preprocessedDataSetItem.ProcessedWords);
-                char[] chars = connectedWords.ToCharArray();
-
-                for (int i = 0; i < chars.Length - N; i++)
-                {
-                    StringBuilder stringBuilder = new StringBuilder();
-                    for (int j = i; j < i + N; j++)
-                    {
-                        stringBuilder.Append(chars[j]);
-                    }
-
-                    string tmpKey = stringBuilder.ToString();
-                    if(tempDictionary.ContainsKey(tmpKey))
-                        tempDictionary[tmpKey] = tempDictionary[tmpKey] + 1.0;
-                    else
-                    {
-                        tempDictionary.Add(tmpKey, 1.0);
-                    }
-                }
-                extractedData.Add(new DataFeatureDictionary(preprocessedDataSetItem.Labels[0].Value,tempDictionary,""));
-            }
-
-            return extractedData;
-        }
-
         public double[] extractFeatureDictionary(PreprocessedDataSetItem PreprocessedDataSetItems, List<string> keyWords)
         {
-            throw new NotImplementedException();
+            DataFeatureDictionary extractedData = new DataFeatureDictionary();
+
+            Dictionary<string, double> tempDictionary = new Dictionary<string, double>();
+            string connectedWords = string.Join("", PreprocessedDataSetItems.ProcessedWords);
+            char[] chars = connectedWords.ToCharArray();
+
+            for (int i = 0; i < chars.Length - N; i++)
+            {
+                StringBuilder stringBuilder = new StringBuilder();
+                for (int j = i; j < i + N; j++)
+                {
+                    stringBuilder.Append(chars[j]);
+                }
+
+                string tmpKey = stringBuilder.ToString();
+                if (tempDictionary.ContainsKey(tmpKey))
+                    tempDictionary[tmpKey] = tempDictionary[tmpKey] + 1.0;
+                else
+                {
+                    tempDictionary.Add(tmpKey, 1.0);
+                }
+            }
+            extractedData = new DataFeatureDictionary(PreprocessedDataSetItems.Labels[0].Value, tempDictionary, "");
+
+            double[] extractedVector = new double[keyWords.Count];
+           
+
+            int index = 0;
+            foreach (var word in keyWords)
+            {
+                double defaultValue = 0.0;
+                if (extractedData.Feature.TryGetValue(word, out defaultValue))
+                {
+                    extractedVector[index] = defaultValue;
+                }
+                index++;
+            }
+            return extractedVector;
         }
     }
 }

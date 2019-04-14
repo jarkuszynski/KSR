@@ -12,7 +12,7 @@ namespace KSR.DataPreprocessing
     {
         public static PreprocessedDataSetItem PreprocessText(DataSetItem dataSetItem)
         {
-            char[] delimiters = new[] {' ', ',', ';', '.', '\t', '\r', '\n', '+'};
+            char[] delimiters = new[] {' ', ',', ';', '.', '\t', '\r', '\n', '+', '-'};
             var wordsWithoutDelimiters =
                 dataSetItem.Article.Body.Split(delimiters, StringSplitOptions.RemoveEmptyEntries)
                     .Where(w => w.Length > 1 && !double.TryParse(w, out _)).ToList();       //000?
