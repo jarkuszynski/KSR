@@ -103,7 +103,6 @@ namespace KSR.ConsoleApp
 
             double trainingDataPercentage = Config.TrainingSetPercentage;
             double testingDataPercentage = Config.TestingSetPercentage;
-            filtered = filtered.GetRange(0, 500);
 
             var training = filtered.GetRange(0, (int)(filtered.Count * Config.TrainingSetPercentage));
             var testing = filtered.GetRange((int)(filtered.Count * Config.TrainingSetPercentage), (int)(filtered.Count * testingDataPercentage));

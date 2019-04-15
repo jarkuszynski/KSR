@@ -10,7 +10,7 @@ namespace KSR.Extractors
 {
     public class MostCommonKeyWordsExtractor
     {
-        private readonly int NUMBER_OF_COMMON_WORDS = 20;
+        private readonly int NUMBER_OF_COMMON_WORDS = 10;
 
         public List<string> Labels { get; set; }
 
@@ -86,7 +86,7 @@ namespace KSR.Extractors
             }
             var countedAllWords = allWordsCouted.OrderByDescending(d => d.Value).ToDictionary(k => k.Key, v => v.Value);
             List<string> mostCommonWords = new List<string>();
-            for (int k = 0; k < 20; k++)
+            for (int k = 0; k < NUMBER_OF_COMMON_WORDS; k++)
             {
                 mostCommonWords.Add(countedAllWords.ElementAt(k).Key);
             }
