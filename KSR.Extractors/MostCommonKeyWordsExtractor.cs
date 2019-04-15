@@ -10,7 +10,7 @@ namespace KSR.Extractors
 {
     public class MostCommonKeyWordsExtractor
     {
-        private readonly int NUMBER_OF_COMMON_WORDS = 20;
+        private readonly int NUMBER_OF_COMMON_WORDS = 10;
 
         public List<string> Labels { get; set; }
 

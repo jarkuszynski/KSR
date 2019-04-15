@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Xml;
 using KSR.XmlDataGetter.Models;
@@ -165,14 +166,15 @@ namespace KSR.XmlDataGetter
                 while (!reader.EndOfStream)
                 {
                     var line = reader.ReadLine();
-                    var values = line.Split(',');
-                    List<Label> labels = new List<Label>();
+                    var firstComma = line.IndexOf(',');
+                    var label = line.Substring(0, firstComma);
+                    var article = line.Substring(firstComma+1);
 
-                    topics.Add(values[0]);
-                    text.Add(values[1]);
-                    labels.Add(new Label(values[0]));
-                    dataSet.Add(new DataSetItem(new DataArticle("", "", values[1]),
-                                            new DataLabels(labels)));
+                    List<Label> l = new List<Label>();
+                    l.Add(new Label(label));
+
+                    dataSet.Add(new DataSetItem(new DataArticle("", "", article),
+                                            new DataLabels(l)));
                 }
 
             }
